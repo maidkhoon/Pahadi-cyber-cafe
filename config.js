@@ -110,6 +110,48 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       ]
     },
     {
+      id: "bollywood-live",
+      icon: "📻",
+      name: "Bollywood Live",
+      description: "Bollywood radio, seedha live",
+      // Live radio from radio-browser.info: plays as plain audio, so it keeps going in the background.
+      source: "internet",
+      search: [{"tag": "bollywood"}],
+      djComments: [
+        "Ye live radio hai, phone band karo tab bhi bajega! 📴",
+        "Bollywood ka masala, non-stop! 🎬",
+        "Filmy mood on hai! 🍿"
+      ]
+    },
+    {
+      id: "old-is-gold-live",
+      icon: "📼",
+      name: "Old Is Gold Live",
+      description: "90s ke gaane, live radio pe",
+      // Live radio from radio-browser.info: plays as plain audio, so it keeps going in the background.
+      source: "internet",
+      search: [{"tag": "90s", "countrycode": "IN"}, {"tag": "retro", "countrycode": "IN"}],
+      djComments: [
+        "Walkman wale din wapas aa gaye! 📼",
+        "Ye live radio hai, phone jeb mein rakho aur suno! 📴",
+        "Purana gaana, sona gaana! ✨"
+      ]
+    },
+    {
+      id: "punjabi-live",
+      icon: "🌾",
+      name: "Punjabi Live",
+      description: "Punjabi radio, seedha live",
+      // Live radio from radio-browser.info: plays as plain audio, so it keeps going in the background.
+      source: "internet",
+      search: [{"name": "punjabi"}, {"tag": "punjabi"}, {"tag": "bhangra"}],
+      djComments: [
+        "Balle balle, live radio chalu! 🌾",
+        "Phone lock karo, bhangra chalta rahega! 📴",
+        "Oye hoye, Punjabi tadka! 🕺"
+      ]
+    },
+    {
       id: "old-is-gold",
       icon: "📼",
       name: "Old Is Gold",

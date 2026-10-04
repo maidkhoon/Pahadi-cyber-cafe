@@ -98,9 +98,9 @@ function getStationSource(station) {
   return ["local", "internet"].includes(station.source) ? station.source : "youtube";
 }
 
-async function fetchInternetTracks(station) {
+async function searchRadioStreams(search) {
   const params = new URLSearchParams({
-    ...station.search,
+    ...search,
     hidebroken: "true",
     is_https: "true",
     order: "clickcount",
@@ -110,21 +110,27 @@ async function fetchInternetTracks(station) {
   for (const host of RADIO_API_HOSTS) {
     try {
       const response = await fetch(`${host}/json/stations/search?${params}`);
-      if (!response.ok) continue;
-      const results = await response.json();
-      // https only (mixed content is blocked), and skip HLS/playlist URLs <audio> can't play everywhere.
-      return results
-        .filter((item) => item.url_resolved?.startsWith("https://") && !item.hls && !/\.(m3u8?|pls)(\?|$)/i.test(item.url_resolved))
-        .map((item) => ({
-          title: item.name.trim(),
-          artist: [item.country, item.tags.split(",").slice(0, 3).join(", ")].filter(Boolean).join(" · "),
-          file: item.url_resolved
-        }));
+      if (response.ok) return await response.json();
     } catch {
       // try next mirror
     }
   }
   return [];
+}
+
+async function fetchInternetTracks(station) {
+  const searches = [].concat(station.search || []);
+  const results = (await Promise.all(searches.map(searchRadioStreams))).flat();
+  const seen = new Set();
+  // https only (mixed content is blocked), and skip HLS/playlist URLs <audio> can't play everywhere.
+  return results
+    .filter((item) => item.url_resolved?.startsWith("https://") && !item.hls && !/\.(m3u8?|pls)(\?|$)/i.test(item.url_resolved))
+    .filter((item) => !seen.has(item.url_resolved) && seen.add(item.url_resolved))
+    .map((item) => ({
+      title: item.name.trim(),
+      artist: "Live radio 📴",
+      file: item.url_resolved
+    }));
 }
 
 function syncPlayerSurface() {
@@ -154,6 +160,7 @@ function renderStations() {
       <span>${station.icon}</span>
       <b>${station.name}</b>
       <small>${station.description}</small>
+      ${getStationSource(station) === "youtube" ? "" : `<em class="bg-badge">📴 Phone lock pe bhi chalega</em>`}
     </button>
   `).join("");
 
@@ -387,7 +394,7 @@ function loadLocalTrack(index, shouldPlay) {
   localStorage.setItem(storageKeys.localTrack, String(index));
   $("#trackTitle").textContent = track.title;
   $("#trackArtist").textContent = track.artist || state.station.name;
-  $("#localTrackCounter").textContent = `Gaana ${index + 1} / ${tracks.length}`;
+  $("#localTrackCounter").textContent = `${state.source === "internet" ? "Radio" : "Gaana"} ${index + 1} / ${tracks.length}`;
   state.localAudio.src = track.file;
   state.localAudio.volume = state.volume / 100;
   state.localAudio.load();
@@ -644,6 +651,7 @@ function setupVisibilityResume() {
 
     // <audio> keeps playing in the background on its own; only the YouTube iframe needs a nudge.
     if (state.shouldResumeOnFocus && state.isReady && state.source === "youtube") {
+      setTimeout(() => toast("Background mein sunna hai? 📴 wala station chuniye"), 2500);
       setTimeout(() => {
         state.player.playVideo();
         setStatus("Wapas aa gaye! Gaana phir se chal raha hai 🎶", "Baj raha hai");
@@ -677,7 +685,7 @@ function toast(message) {
   clearTimeout(window.pahadiToastTimer);
   window.pahadiToastTimer = setTimeout(() => {
     toastEl.style.display = "none";
-  }, 1800);
+  }, 3500);
 }
 
 function registerServiceWorker() {
