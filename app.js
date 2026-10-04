@@ -64,22 +64,25 @@ function parseIsoDuration(text) {
   return d * 86400 + h * 3600 + m * 60 + sec;
 }
 
-// Keep single songs (not long mixes), most-viewed first. Falls back to everything if too few are left.
-function pickPopularSongs(tracks, minimum = 10) {
-  const songs = tracks.filter((track) => !track.seconds || track.seconds <= MAX_SONG_SECONDS);
-  return (songs.length >= minimum ? songs : tracks).sort((a, b) => b.views - a.views);
+// Single songs first (most-viewed first), long mixes only after them so the station never runs dry.
+function pickPopularSongs(tracks) {
+  const byViews = (x, y) => y.views - x.views;
+  const isSingle = (track) => !track.seconds || track.seconds <= MAX_SONG_SECONDS;
+  return [...tracks.filter(isSingle).sort(byViews), ...tracks.filter((track) => !isSingle(track)).sort(byViews)];
 }
 
-// Searches YouTube for the station's most-viewed songs (needs config.youtube.apiKey), then asks for
-// their length and views. Cached for 24h per query: a search costs 100 of the key's 10,000 daily
+// Searches YouTube for the station's songs (needs config.youtube.apiKey; relevance keeps them on topic),
+// then asks for their length and views so the most-viewed single songs come first. Cached for 24h per query: a search costs 100 of the key's 10,000 daily
 // quota units (the details call costs 1).
 async function findYouTubeVideos(station) {
   const { apiKey } = config.youtube;
   if (!apiKey || !station.searchQuery || station.foundIds) return;
-  const cacheKey = `pahadiYT3:${station.searchQuery}`;
+  const cacheKey = `pahadiYT4:${station.searchQuery}`;
   const useTracks = (tracks) => {
-    // Light shuffle inside the popular list so it feels like radio, not the same order every visit.
-    const shuffled = tracks.slice(0, 40).sort(() => Math.random() - 0.5);
+    // Shuffle the top single songs so it feels like radio; long mixes stay at the end.
+    const isSingle = (track) => !track.seconds || track.seconds <= MAX_SONG_SECONDS;
+    const singles = tracks.filter(isSingle).slice(0, 40).sort(() => Math.random() - 0.5);
+    const shuffled = [...singles, ...tracks.filter((track) => !isSingle(track)).slice(0, 5)];
     station.foundIds = shuffled.map((track) => track.id);
     station.ytInfo = Object.fromEntries(shuffled.map((track) => [track.id, track]));
   };
@@ -96,7 +99,6 @@ async function findYouTubeVideos(station) {
   const params = new URLSearchParams({
     part: "snippet",
     type: "video",
-    order: "viewCount",
     videoEmbeddable: "true",
     videoSyndicated: "true",
     videoCategoryId: "10",
@@ -130,7 +132,7 @@ async function findYouTubeVideos(station) {
         views: Number(byId[track.id]?.statistics?.viewCount) || 0
       }));
     } catch (error) {
-      console.warn(error); // keep search order (already by views) without the length filter
+      console.warn(error); // keep search order without the length/views filter
     }
     tracks = pickPopularSongs(tracks);
     useTracks(tracks);
