@@ -70,7 +70,9 @@ function matchesTopic(track, topic) {
   const text = `${track.title} ${track.channel}`;
   const haystack = topic.in === "all" ? `${text} ${track.about || ""}` : text;
   const all = (topic.match || []).every((pattern) => new RegExp(pattern, "i").test(haystack));
-  return all && !(topic.exclude && new RegExp(topic.exclude, "i").test(track.title));
+  const excluded = (topic.exclude && new RegExp(topic.exclude, "i").test(track.title))
+    || (topic.excludeAll && new RegExp(topic.excludeAll, "i").test(`${text} ${track.about || ""}`));
+  return all && !excluded;
 }
 
 // YouTube Shorts: vertical video, under a minute, or tagged #shorts in the title.
@@ -93,7 +95,7 @@ function pickPopularSongs(tracks) {
 async function findYouTubeVideos(station) {
   const { apiKey } = config.youtube;
   if (!apiKey || !station.searchQuery || station.foundIds) return;
-  const cacheKey = `pahadiYT6:${station.id}:${station.searchQuery}`;
+  const cacheKey = `pahadiYT7:${station.id}:${station.searchQuery}`;
   const useTracks = (tracks) => {
     // Shuffle the top single songs so it feels like radio; long mixes stay at the end.
     const isSingle = (track) => !track.seconds || track.seconds <= MAX_SONG_SECONDS;

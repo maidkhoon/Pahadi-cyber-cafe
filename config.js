@@ -25,7 +25,8 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
   ],
   // Each YouTube station's `topic` keeps it on its own kind of song: every `match` pattern must
   // appear in the song's title + channel ("in": "title") or also in its description/tags
-  // ("in": "all"); `exclude` drops titles matching it. Patterns are case-insensitive regex.
+  // ("in": "all"); `exclude` drops titles matching it, `excludeAll` drops songs whose title,
+  // channel or description matches it (e.g. another region). Patterns are case-insensitive regex.
   // Station list sections, in display order. Each station's `group` picks one.
   stationGroups: [
     { id: "pahadi", title: "🏔️ Pahadi Gaane", note: "Mandi aur Himachal ke gaane", color: "#f4c35a" },
@@ -41,7 +42,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "Haath pakdo, gol ghero, Nati shuru!",
       source: "youtube",
       searchQuery: "pahadi nati song",
-      topic: {"match": ["nati|naati|natti"], "in": "title"},
+      topic: {"match": ["nati|naati|natti"], "in": "title", "excludeAll": "garhwal|kumaon|uttarakhand|jaunsar|nainital|dehradun|almora|pithoragarh|inder arya"},
       playlistUrl: "",
       playlistId: "",
       videoIds: ["lm1z5syVSdg", "RH4cMxUzMy0"],
@@ -60,7 +61,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "DJ wale pahadi gaane, full josh",
       source: "youtube",
       searchQuery: "pahadi dj song",
-      topic: {"match": ["dj|dance|remix|dhamaka|beat|nonstop|non stop", "pahad|pahar|himach|kullu|kulvi|mandi|mandyali|nati|naati|natti|chamba|kangri|sirmaur|shimla|kinnaur|garhwal|kumaon|uttarakhand|jaunsari"], "in": "title"},
+      topic: {"match": ["dj|dance|remix|dhamaka|beat|nonstop|non stop", "pahad|pahar|himach|kullu|kulvi|mandi|mandyali|nati|naati|natti|chamba|kangri|sirmaur|shimla|kinnaur"], "in": "title", "excludeAll": "garhwal|kumaon|uttarakhand|jaunsar|nainital|dehradun|almora|pithoragarh|inder arya"},
       playlistUrl: "",
       playlistId: "",
       videoIds: ["lm1z5syVSdg", "RH4cMxUzMy0"],
@@ -79,7 +80,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "Pahadi swag, pahadi rap",
       source: "youtube",
       searchQuery: "himachali rap song",
-      topic: {"match": ["rap|hip ?hop|drill|rapper|cypher", "pahad|pahar|himach|kullu|kulvi|mandi|mandyali|nati|naati|natti|chamba|kangri|sirmaur|shimla|kinnaur|garhwal|kumaon|uttarakhand|jaunsari"], "in": "title"},
+      topic: {"match": ["rap|hip ?hop|drill|rapper|cypher", "pahad|pahar|himach|kullu|kulvi|mandi|mandyali|nati|naati|natti|chamba|kangri|sirmaur|shimla|kinnaur"], "in": "title", "excludeAll": "garhwal|kumaon|uttarakhand|jaunsar|nainital|dehradun|almora|pithoragarh|inder arya"},
       playlistUrl: "",
       playlistId: "",
       videoIds: [],
@@ -98,7 +99,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "Purane gaane, purani yaadein",
       source: "youtube",
       searchQuery: "purane pahadi lok geet",
-      topic: {"match": ["pahad|pahar|himach|kullu|kulvi|mandi|mandyali|nati|naati|natti|chamba|kangri|sirmaur|shimla|kinnaur|garhwal|kumaon|uttarakhand|jaunsari"], "in": "title", "exclude": "new|latest|nayi|naya|20(1[6-9]|2\\d)"},
+      topic: {"match": ["pahad|pahar|himach|kullu|kulvi|mandi|mandyali|nati|naati|natti|chamba|kangri|sirmaur|shimla|kinnaur"], "in": "title", "exclude": "new|latest|nayi|naya|20(1[6-9]|2\\d)", "excludeAll": "garhwal|kumaon|uttarakhand|jaunsar|nainital|dehradun|almora|pithoragarh|inder arya"},
       playlistUrl: "",
       playlistId: "",
       videoIds: ["lm1z5syVSdg", "RH4cMxUzMy0"],
