@@ -54,15 +54,34 @@ function getStationMedia(station) {
   return { videoIds, playlistId };
 }
 
-// Searches YouTube for the station's songs (needs config.youtube.apiKey). Results are cached
-// for 24h per query because each search costs 100 of the key's 10,000 daily quota units.
+const MAX_SONG_SECONDS = 12 * 60; // longer than this is usually a jukebox / nonstop mix, not one song
+
+// "PT1H2M5S" -> 3725
+function parseIsoDuration(text) {
+  const match = /^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/.exec(text || "");
+  if (!match) return 0;
+  const [d, h, m, sec] = match.slice(1).map((part) => Number(part) || 0);
+  return d * 86400 + h * 3600 + m * 60 + sec;
+}
+
+// Keep single songs (not long mixes), most-viewed first. Falls back to everything if too few are left.
+function pickPopularSongs(tracks, minimum = 10) {
+  const songs = tracks.filter((track) => !track.seconds || track.seconds <= MAX_SONG_SECONDS);
+  return (songs.length >= minimum ? songs : tracks).sort((a, b) => b.views - a.views);
+}
+
+// Searches YouTube for the station's most-viewed songs (needs config.youtube.apiKey), then asks for
+// their length and views. Cached for 24h per query: a search costs 100 of the key's 10,000 daily
+// quota units (the details call costs 1).
 async function findYouTubeVideos(station) {
   const { apiKey } = config.youtube;
   if (!apiKey || !station.searchQuery || station.foundIds) return;
-  const cacheKey = `pahadiYT2:${station.searchQuery}`;
+  const cacheKey = `pahadiYT3:${station.searchQuery}`;
   const useTracks = (tracks) => {
-    station.foundIds = tracks.map((track) => track.id);
-    station.ytInfo = Object.fromEntries(tracks.map((track) => [track.id, track]));
+    // Light shuffle inside the popular list so it feels like radio, not the same order every visit.
+    const shuffled = tracks.slice(0, 40).sort(() => Math.random() - 0.5);
+    station.foundIds = shuffled.map((track) => track.id);
+    station.ytInfo = Object.fromEntries(shuffled.map((track) => [track.id, track]));
   };
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey));
@@ -73,9 +92,11 @@ async function findYouTubeVideos(station) {
   } catch {
     // ignore bad cache
   }
+  const api = "https://www.googleapis.com/youtube/v3";
   const params = new URLSearchParams({
     part: "snippet",
     type: "video",
+    order: "viewCount",
     videoEmbeddable: "true",
     videoSyndicated: "true",
     videoCategoryId: "10",
@@ -86,13 +107,32 @@ async function findYouTubeVideos(station) {
     key: apiKey
   });
   try {
-    const response = await fetch(`https://www.googleapis.com/youtube/v3/search?${params}`);
+    const response = await fetch(`${api}/search?${params}`);
     if (!response.ok) throw new Error(`YouTube search failed: ${response.status}`);
     const data = await response.json();
-    // Shuffle so each visit feels like radio, not the same top result every time.
-    const tracks = data.items
-      .map((item) => ({ id: item.id.videoId, title: item.snippet.title, channel: item.snippet.channelTitle }))
-      .sort(() => Math.random() - 0.5);
+    let tracks = data.items.map((item) => ({
+      id: item.id.videoId,
+      title: item.snippet.title,
+      channel: item.snippet.channelTitle,
+      seconds: 0,
+      views: 0
+    }));
+    try {
+      const details = await fetch(`${api}/videos?${new URLSearchParams({
+        part: "contentDetails,statistics",
+        id: tracks.map((track) => track.id).join(","),
+        key: apiKey
+      })}`).then((res) => (res.ok ? res.json() : { items: [] }));
+      const byId = Object.fromEntries(details.items.map((item) => [item.id, item]));
+      tracks = tracks.map((track) => ({
+        ...track,
+        seconds: parseIsoDuration(byId[track.id]?.contentDetails?.duration),
+        views: Number(byId[track.id]?.statistics?.viewCount) || 0
+      }));
+    } catch (error) {
+      console.warn(error); // keep search order (already by views) without the length filter
+    }
+    tracks = pickPopularSongs(tracks);
     useTracks(tracks);
     localStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), tracks }));
   } catch (error) {
