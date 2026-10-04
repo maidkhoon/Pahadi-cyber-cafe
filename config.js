@@ -1,5 +1,5 @@
 window.PAHADI_CYBER_CAFE_CONFIG = {
-  defaultStationId: "mandyali-hits",
+  defaultStationId: "pahadi-nati",
   youtube: {
     // Optional YouTube Data API v3 key. When set, YouTube stations search YouTube for songs
     // using their searchQuery. Without it they play the fixed videoIds below. See README.
@@ -30,24 +30,6 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     { id: "more", title: "🎬 Bollywood, Punjabi aur Rap", note: "Har mood ke gaane", color: "#ff7eb6" }
   ],
   stations: [
-    {
-      id: "mandyali-hits",
-      group: "pahadi",
-      icon: "🏔️",
-      name: "Mandyali Hits",
-      description: "Mandi ke naye Mandyali gaane",
-      source: "youtube",
-      searchQuery: "mandyali songs",
-      playlistUrl: "",
-      playlistId: "",
-      videoIds: ["lm1z5syVSdg", "RH4cMxUzMy0"],
-      djComments: [
-        "Mandi waalo, haath upar karo! 🙌",
-        "Ye gaana Mandi ki galiyon se seedha aapke phone mein! 📲",
-        "Sundernagar, Jogindernagar, Sarkaghat, Karsog... sab sun rahe ho na? 😄",
-        "Choti Kashi ka pyaar, gaane mein bhar ke! 🔱"
-      ]
-    },
     {
       id: "pahadi-nati",
       group: "pahadi",

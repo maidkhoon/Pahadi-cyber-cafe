@@ -49,7 +49,7 @@ The app uses YouTube's embedded player. It does not download, scrape, convert, p
 
 ## Stations
 
-Mandyali Hits, Pahadi Nati, Pahadi Dance, Himachali Rap, Purane Pahadi Geet, Old Is Gold,
+Pahadi Nati, Pahadi Dance, Himachali Rap, Purane Pahadi Geet, Old Is Gold,
 Punjabi Hits, Desi Rap and Shaadi Special. Music starts when you press "Gaane Suno".
 
 ## DJ Comments

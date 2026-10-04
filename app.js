@@ -64,11 +64,18 @@ function parseIsoDuration(text) {
   return d * 86400 + h * 3600 + m * 60 + sec;
 }
 
-// Single songs first (most-viewed first), long mixes only after them so the station never runs dry.
+// YouTube Shorts: vertical video, under a minute, or tagged #shorts in the title.
+function isShort(track) {
+  return track.vertical || (track.seconds > 0 && track.seconds < 60) || /#shorts?\b/i.test(track.title);
+}
+
+// No Shorts ever. Single songs first (most-viewed first), long mixes only after them so the
+// station never runs dry.
 function pickPopularSongs(tracks) {
   const byViews = (x, y) => y.views - x.views;
   const isSingle = (track) => !track.seconds || track.seconds <= MAX_SONG_SECONDS;
-  return [...tracks.filter(isSingle).sort(byViews), ...tracks.filter((track) => !isSingle(track)).sort(byViews)];
+  const songs = tracks.filter((track) => !isShort(track));
+  return [...songs.filter(isSingle).sort(byViews), ...songs.filter((track) => !isSingle(track)).sort(byViews)];
 }
 
 // Searches YouTube for the station's songs (needs config.youtube.apiKey; relevance keeps them on topic),
@@ -77,7 +84,7 @@ function pickPopularSongs(tracks) {
 async function findYouTubeVideos(station) {
   const { apiKey } = config.youtube;
   if (!apiKey || !station.searchQuery || station.foundIds) return;
-  const cacheKey = `pahadiYT4:${station.searchQuery}`;
+  const cacheKey = `pahadiYT5:${station.searchQuery}`;
   const useTracks = (tracks) => {
     // Shuffle the top single songs so it feels like radio; long mixes stay at the end.
     const isSingle = (track) => !track.seconds || track.seconds <= MAX_SONG_SECONDS;
@@ -121,15 +128,17 @@ async function findYouTubeVideos(station) {
     }));
     try {
       const details = await fetch(`${api}/videos?${new URLSearchParams({
-        part: "contentDetails,statistics",
+        part: "contentDetails,statistics,player",
         id: tracks.map((track) => track.id).join(","),
+        maxWidth: "640",
         key: apiKey
       })}`).then((res) => (res.ok ? res.json() : { items: [] }));
       const byId = Object.fromEntries(details.items.map((item) => [item.id, item]));
       tracks = tracks.map((track) => ({
         ...track,
         seconds: parseIsoDuration(byId[track.id]?.contentDetails?.duration),
-        views: Number(byId[track.id]?.statistics?.viewCount) || 0
+        views: Number(byId[track.id]?.statistics?.viewCount) || 0,
+        vertical: Number(byId[track.id]?.player?.embedHeight) > Number(byId[track.id]?.player?.embedWidth)
       }));
     } catch (error) {
       console.warn(error); // keep search order without the length/views filter
