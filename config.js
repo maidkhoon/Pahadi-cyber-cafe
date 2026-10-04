@@ -23,6 +23,9 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     "Rukna mana hai, agla gaana bhi zabardast hai! 🎶",
     "Maggi ban rahi hai, tab tak ye gaana suno! 🍜"
   ],
+  // Each YouTube station's `topic` keeps it on its own kind of song: every `match` pattern must
+  // appear in the song's title + channel ("in": "title") or also in its description/tags
+  // ("in": "all"); `exclude` drops titles matching it. Patterns are case-insensitive regex.
   // Station list sections, in display order. Each station's `group` picks one.
   stationGroups: [
     { id: "pahadi", title: "🏔️ Pahadi Gaane", note: "Mandi aur Himachal ke gaane", color: "#f4c35a" },
@@ -38,6 +41,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "Haath pakdo, gol ghero, Nati shuru!",
       source: "youtube",
       searchQuery: "pahadi nati song",
+      topic: {"match": ["nati|naati|natti"], "in": "title"},
       playlistUrl: "",
       playlistId: "",
       videoIds: ["lm1z5syVSdg", "RH4cMxUzMy0"],
@@ -55,7 +59,8 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       name: "Pahadi Dance",
       description: "DJ wale pahadi gaane, full josh",
       source: "youtube",
-      searchQuery: "pahadi dj dance song",
+      searchQuery: "pahadi dj song",
+      topic: {"match": ["dj|dance|remix|dhamaka|beat|nonstop|non stop", "pahad|pahar|himach|kullu|kulvi|mandi|mandyali|nati|naati|natti|chamba|kangri|sirmaur|shimla|kinnaur|garhwal|kumaon|uttarakhand|jaunsari"], "in": "title"},
       playlistUrl: "",
       playlistId: "",
       videoIds: ["lm1z5syVSdg", "RH4cMxUzMy0"],
@@ -74,6 +79,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "Pahadi swag, pahadi rap",
       source: "youtube",
       searchQuery: "himachali rap song",
+      topic: {"match": ["rap|hip ?hop|drill|rapper|cypher", "pahad|pahar|himach|kullu|kulvi|mandi|mandyali|nati|naati|natti|chamba|kangri|sirmaur|shimla|kinnaur|garhwal|kumaon|uttarakhand|jaunsari"], "in": "title"},
       playlistUrl: "",
       playlistId: "",
       videoIds: [],
@@ -91,7 +97,8 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       name: "Purane Pahadi Geet",
       description: "Purane gaane, purani yaadein",
       source: "youtube",
-      searchQuery: "purane pahadi geet",
+      searchQuery: "purane pahadi lok geet",
+      topic: {"match": ["pahad|pahar|himach|kullu|kulvi|mandi|mandyali|nati|naati|natti|chamba|kangri|sirmaur|shimla|kinnaur|garhwal|kumaon|uttarakhand|jaunsari"], "in": "title", "exclude": "new|latest|nayi|naya|20(1[6-9]|2\\d)"},
       playlistUrl: "",
       playlistId: "",
       videoIds: ["lm1z5syVSdg", "RH4cMxUzMy0"],
@@ -155,6 +162,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "90s aur 2000s ke Bollywood gaane",
       source: "youtube",
       searchQuery: "90s hindi song full video",
+      topic: {"match": ["199\\d|198\\d|90s|90's|90 s|purane|old is gold|evergreen|sadabahar|kumar sanu|alka yagnik|udit narayan|lata mangeshkar|kishore kumar|mohammed rafi|nadeem|anand.milind|jatin.lalit|anu malik"], "in": "all", "exclude": "new|latest|20(1\\d|2\\d)|remix|lofi|lo-fi|slowed"},
       playlistUrl: "",
       playlistId: "",
       videoIds: [],
@@ -173,6 +181,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "Balle balle! Punjabi tadka",
       source: "youtube",
       searchQuery: "punjabi song",
+      topic: {"match": ["punjabi|panjabi"], "in": "all"},
       playlistUrl: "",
       playlistId: "",
       videoIds: [],
@@ -191,6 +200,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "Hindi aur desi rap",
       source: "youtube",
       searchQuery: "desi hip hop hindi rap song",
+      topic: {"match": ["rap|hip ?hop|rapper|drill|cypher"], "in": "all"},
       playlistUrl: "",
       playlistId: "",
       videoIds: [],
@@ -209,6 +219,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       description: "Shaadi aur baraat mein bajne wale gaane",
       source: "youtube",
       searchQuery: "shaadi dance song",
+      topic: {"match": ["shaadi|shadi|wedding|dulha|dulhan|baraat|barat|sangeet|mehndi|mehendi|haldi|vivah|byah|bride|groom|ladki wale|ladke wale|banno|banna|sehra"], "in": "all"},
       playlistUrl: "",
       playlistId: "",
       videoIds: [],

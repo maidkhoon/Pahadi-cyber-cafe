@@ -64,6 +64,15 @@ function parseIsoDuration(text) {
   return d * 86400 + h * 3600 + m * 60 + sec;
 }
 
+// Does this song belong on the station? See `topic` in config.js.
+function matchesTopic(track, topic) {
+  if (!topic) return true;
+  const text = `${track.title} ${track.channel}`;
+  const haystack = topic.in === "all" ? `${text} ${track.about || ""}` : text;
+  const all = (topic.match || []).every((pattern) => new RegExp(pattern, "i").test(haystack));
+  return all && !(topic.exclude && new RegExp(topic.exclude, "i").test(track.title));
+}
+
 // YouTube Shorts: vertical video, under a minute, or tagged #shorts in the title.
 function isShort(track) {
   return track.vertical || (track.seconds > 0 && track.seconds < 60) || /#shorts?\b/i.test(track.title);
@@ -84,7 +93,7 @@ function pickPopularSongs(tracks) {
 async function findYouTubeVideos(station) {
   const { apiKey } = config.youtube;
   if (!apiKey || !station.searchQuery || station.foundIds) return;
-  const cacheKey = `pahadiYT5:${station.searchQuery}`;
+  const cacheKey = `pahadiYT6:${station.id}:${station.searchQuery}`;
   const useTracks = (tracks) => {
     // Shuffle the top single songs so it feels like radio; long mixes stay at the end.
     const isSingle = (track) => !track.seconds || track.seconds <= MAX_SONG_SECONDS;
@@ -123,12 +132,13 @@ async function findYouTubeVideos(station) {
       id: item.id.videoId,
       title: item.snippet.title,
       channel: item.snippet.channelTitle,
+      about: item.snippet.description,
       seconds: 0,
       views: 0
     }));
     try {
       const details = await fetch(`${api}/videos?${new URLSearchParams({
-        part: "contentDetails,statistics,player",
+        part: "snippet,contentDetails,statistics,player",
         id: tracks.map((track) => track.id).join(","),
         maxWidth: "640",
         key: apiKey
@@ -138,12 +148,16 @@ async function findYouTubeVideos(station) {
         ...track,
         seconds: parseIsoDuration(byId[track.id]?.contentDetails?.duration),
         views: Number(byId[track.id]?.statistics?.viewCount) || 0,
-        vertical: Number(byId[track.id]?.player?.embedHeight) > Number(byId[track.id]?.player?.embedWidth)
+        vertical: Number(byId[track.id]?.player?.embedHeight) > Number(byId[track.id]?.player?.embedWidth),
+        about: [byId[track.id]?.snippet?.description, ...(byId[track.id]?.snippet?.tags || [])].join(" ") || track.about
       }));
     } catch (error) {
       console.warn(error); // keep search order without the length/views filter
     }
-    tracks = pickPopularSongs(tracks);
+    // Only songs that fit this station's topic; descriptions are dropped before caching.
+    tracks = pickPopularSongs(tracks.filter((track) => matchesTopic(track, station.topic)))
+      .map(({ about, ...track }) => track);
+    if (!tracks.length) throw new Error(`No on-topic songs for ${station.name}`);
     useTracks(tracks);
     localStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), tracks }));
   } catch (error) {
