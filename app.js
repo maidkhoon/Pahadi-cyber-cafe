@@ -59,18 +59,22 @@ function getStationMedia(station) {
 async function findYouTubeVideos(station) {
   const { apiKey } = config.youtube;
   if (!apiKey || !station.searchQuery || station.foundIds) return;
-  const cacheKey = `pahadiYT:${station.searchQuery}`;
+  const cacheKey = `pahadiYT2:${station.searchQuery}`;
+  const useTracks = (tracks) => {
+    station.foundIds = tracks.map((track) => track.id);
+    station.ytInfo = Object.fromEntries(tracks.map((track) => [track.id, track]));
+  };
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey));
     if (cached && Date.now() - cached.at < 24 * 3600 * 1000) {
-      station.foundIds = cached.ids;
+      useTracks(cached.tracks);
       return;
     }
   } catch {
     // ignore bad cache
   }
   const params = new URLSearchParams({
-    part: "id",
+    part: "snippet",
     type: "video",
     videoEmbeddable: "true",
     videoSyndicated: "true",
@@ -86,8 +90,11 @@ async function findYouTubeVideos(station) {
     if (!response.ok) throw new Error(`YouTube search failed: ${response.status}`);
     const data = await response.json();
     // Shuffle so each visit feels like radio, not the same top result every time.
-    station.foundIds = data.items.map((item) => item.id.videoId).sort(() => Math.random() - 0.5);
-    localStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), ids: station.foundIds }));
+    const tracks = data.items
+      .map((item) => ({ id: item.id.videoId, title: item.snippet.title, channel: item.snippet.channelTitle }))
+      .sort(() => Math.random() - 0.5);
+    useTracks(tracks);
+    localStorage.setItem(cacheKey, JSON.stringify({ at: Date.now(), tracks }));
   } catch (error) {
     console.warn(error);
     station.foundIds = []; // fall back to configured videoIds
@@ -135,6 +142,58 @@ async function fetchInternetTracks(station) {
 
 function syncPlayerSurface() {
   $("#tvTile").classList.toggle("hide", state.source !== "youtube");
+  $("#localPlayerVisual").classList.toggle("hide", state.source === "youtube");
+  $("#progressRow").classList.toggle("hide", state.source === "internet");
+}
+
+// YouTube titles are long: "Nati Bawander | Ramesh Bragta | Latest Pahadi Nonstop Songs 2024".
+// Keep the first part, drop "(Official Video)"-style tags, and decode &amp; etc. from the API.
+function cleanSongTitle(raw) {
+  const text = new DOMParser().parseFromString(raw, "text/html").documentElement.textContent;
+  const first = text.split(/\s+[|•]\s+/)[0];
+  const cleaned = first.replace(/[([][^)\]]*(official|video|audio|lyric|full song|hd|4k)[^)\]]*[)\]]/gi, "").trim();
+  return cleaned || text.trim();
+}
+
+function cleanArtist(raw) {
+  return (raw || "").replace(/\s*-\s*Topic$/i, "").trim();
+}
+
+function formatTime(seconds) {
+  const total = Math.max(0, Math.floor(seconds || 0));
+  const h = Math.floor(total / 3600);
+  const m = Math.floor((total % 3600) / 60);
+  const sec = String(total % 60).padStart(2, "0");
+  return h ? `${h}:${String(m).padStart(2, "0")}:${sec}` : `${m}:${sec}`;
+}
+
+function getPlaybackTimes() {
+  if (state.source === "youtube" && state.player?.getDuration) {
+    return [state.player.getCurrentTime(), state.player.getDuration()];
+  }
+  return [state.localAudio.currentTime, state.localAudio.duration];
+}
+
+function setupProgress() {
+  const seek = $("#seek");
+  let dragging = false;
+  seek.addEventListener("input", () => { dragging = true; });
+  seek.addEventListener("change", () => {
+    dragging = false;
+    const [, duration] = getPlaybackTimes();
+    if (!Number.isFinite(duration) || !duration) return;
+    const target = (duration * Number(seek.value)) / 1000;
+    if (state.source === "youtube") state.player.seekTo(target, true);
+    else state.localAudio.currentTime = target;
+  });
+  setInterval(() => {
+    if (state.source === "internet" || document.hidden) return;
+    const [current, duration] = getPlaybackTimes();
+    const known = Number.isFinite(duration) && duration > 0;
+    $("#timeNow").textContent = formatTime(current);
+    $("#timeTotal").textContent = known ? formatTime(duration) : "0:00";
+    if (!dragging) seek.value = known ? Math.round((current / duration) * 1000) : 0;
+  }, 500);
 }
 
 function getLocalTracks(station) {
@@ -325,6 +384,7 @@ function selectStation(stationId, shouldPlay = false) {
   $("#trackTitle").textContent = station.name;
   $("#trackArtist").textContent = station.description;
   $("#miniIcon").textContent = station.icon;
+  $("#localTrackCounter").textContent = `${station.icon} ${station.name}`;
   $("#miniStation").textContent = station.name;
   state.source = getStationSource(station);
   syncPlayerSurface();
@@ -410,7 +470,7 @@ function loadLocalTrack(index, shouldPlay) {
   localStorage.setItem(storageKeys.localTrack, String(index));
   $("#trackTitle").textContent = track.title;
   $("#trackArtist").textContent = track.artist || state.station.name;
-  $("#localTrackCounter").textContent = `${state.source === "internet" ? "Radio" : "Gaana"} ${index + 1} / ${tracks.length}`;
+  $("#localTrackCounter").textContent = `${state.station.icon} ${state.station.name} · ${state.source === "internet" ? "Radio" : "Gaana"} ${index + 1} / ${tracks.length}`;
   state.localAudio.src = track.file;
   state.localAudio.volume = state.volume / 100;
   state.localAudio.load();
@@ -570,16 +630,20 @@ function togglePlay() {
   else state.player.playVideo();
 }
 
-function updateTrackFromYouTube() {
-  const data = state.player.getVideoData ? state.player.getVideoData() : null;
-  if (!data || !data.title) {
-    updateTrackFromStation();
+function updateTrackFromYouTube(attempt = 0) {
+  const data = state.player.getVideoData?.() || {};
+  const info = state.station.ytInfo?.[data.video_id];
+  const rawTitle = info?.title || data.title;
+  if (!rawTitle) {
+    // The player sometimes reports PLAYING before it knows the title.
+    if (attempt < 5) setTimeout(() => updateTrackFromYouTube(attempt + 1), 1000);
     return;
   }
-  $("#trackTitle").textContent = data.title;
-  $("#trackArtist").textContent = data.author || state.station.name;
+  $("#trackTitle").textContent = cleanSongTitle(rawTitle);
+  $("#trackArtist").textContent = cleanArtist(info?.channel || data.author) || state.station.name;
   const total = state.player.getPlaylist()?.length;
-  if (total) $("#localTrackCounter").textContent = `Gaana ${state.player.getPlaylistIndex() + 1} / ${total}`;
+  if (total) $("#localTrackCounter").textContent = `${state.station.icon} ${state.station.name} · Gaana ${state.player.getPlaylistIndex() + 1} / ${total}`;
+  updateMediaSession();
 }
 
 function updateTrackFromStation() {
@@ -736,6 +800,7 @@ function init() {
   setupVisibilityResume();
   setupNavigation();
   setupMiniPlayer();
+  setupProgress();
   setupMediaSession();
   selectStation(state.station.id, false);
   clock();

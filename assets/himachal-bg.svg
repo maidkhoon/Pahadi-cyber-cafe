@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMax slice">
+  <!-- Himachal at dusk: snow range, sun, deodar forest and a Hadimba-style pagoda temple. -->
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0e1b2e"/>
+      <stop offset="0.45" stop-color="#284558"/>
+      <stop offset="0.68" stop-color="#c98a4b"/>
+      <stop offset="0.8" stop-color="#3a3a2a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#sky)"/>
+  <circle cx="860" cy="470" r="70" fill="#f4c35a" opacity="0.85"/>
+  <!-- far snow peaks -->
+  <path d="M0 560 L120 430 L200 500 L330 330 L430 470 L540 360 L640 480 L760 300 L880 470 L990 380 L1100 480 L1200 400 L1200 800 L0 800 Z" fill="#8fa9b8"/>
+  <path d="M300 368 L330 330 L360 372 L344 366 L330 380 L316 366 Z M730 340 L760 300 L792 344 L774 336 L760 352 L746 336 Z M515 390 L540 360 L566 394 L552 388 L540 400 L528 388 Z M965 410 L990 380 L1014 412 L1000 406 L990 418 L978 406 Z" fill="#f2f7fa"/>
+  <!-- middle range -->
+  <path d="M0 620 L150 520 L260 590 L420 500 L560 600 L700 520 L860 610 L1000 530 L1200 600 L1200 800 L0 800 Z" fill="#2f5546"/>
+  <!-- near hills -->
+  <path d="M0 690 L200 630 L380 680 L560 640 L760 700 L960 640 L1200 690 L1200 800 L0 800 Z" fill="#1a3529"/>
+  <!-- pagoda temple on the near hill -->
+  <g fill="#0f2219">
+    <rect x="236" y="612" width="44" height="40"/>
+    <path d="M220 616 L258 592 L296 616 Z"/>
+    <path d="M226 596 L258 574 L290 596 Z"/>
+    <path d="M232 578 L258 556 L284 578 Z"/>
+    <rect x="256" y="540" width="4" height="18"/>
+  </g>
+  <!-- deodar trees -->
+  <g fill="#0f2219">
+    <path d="M60 700 L80 620 L100 700 Z M70 660 L80 600 L90 660 Z"/>
+    <path d="M120 710 L136 650 L152 710 Z"/>
+    <path d="M420 700 L440 630 L460 700 Z M430 664 L440 612 L450 664 Z"/>
+    <path d="M640 720 L662 640 L684 720 Z M650 680 L662 620 L674 680 Z"/>
+    <path d="M700 724 L716 670 L732 724 Z"/>
+    <path d="M1040 700 L1062 620 L1084 700 Z M1050 660 L1062 600 L1074 660 Z"/>
+    <path d="M1110 712 L1128 650 L1146 712 Z"/>
+  </g>
+  <rect y="720" width="1200" height="80" fill="#0a1510"/>
+</svg>

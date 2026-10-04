@@ -12,19 +12,19 @@
 <body>
   <div id="boot" class="boot-screen">
     <div class="bootbox">
-      <div class="boot-icon" aria-hidden="true">📻</div>
+      <img class="boot-logo" src="assets/topi.svg" alt="">
       <h2>Pahadi Cyber Café</h2>
       <p class="boot-sub">पहाड़ी रेडियो</p>
       <p class="boot-lead">Pahadi Nati, Rap, Old Is Gold, Punjabi, Shaadi ke gaane... sab ek tap mein 🎶</p>
       <button id="enter" type="button">▶ Gaane Suno</button>
       <p class="boot-note">✅ Free hai &nbsp;·&nbsp; ✅ Koi login nahi</p>
     </div>
-    <div class="mountains" aria-hidden="true"></div>
   </div>
 
   <main id="main" class="app-shell hide">
     <header class="banner" id="home">
       <div class="mountains" aria-hidden="true"></div>
+      <img class="banner-logo" src="assets/topi.svg" alt="">
       <div class="banner-text">
         <b>Pahadi Cyber Café</b>
         <small>Apne pahadon ke gaane, apne phone pe 🎶</small>
@@ -39,33 +39,39 @@
       </div>
 
       <div class="player-grid">
-        <div class="radio-face">
-          <div id="localPlayerVisual" class="local-player-visual" aria-hidden="true">
+        <div class="art">
+          <!-- YouTube's terms require the player to stay visible and at least 200x200, so it doubles as the album art. -->
+          <figure id="tvTile" class="art-box art-video">
+            <div id="youtubePlayer" aria-label="Gaane ki photo"></div>
+          </figure>
+          <div id="localPlayerVisual" class="art-box art-radio hide" aria-hidden="true">
             <div class="cassette">
               <span></span>
               <span></span>
             </div>
             <b>PAHADI RADIO</b>
-            <small id="localTrackCounter">Mandi, Himachal se</small>
+            <span class="live-badge">🔴 LIVE</span>
           </div>
-          <!-- YouTube's terms require the player to stay visible and at least 200x200. -->
-          <figure id="tvTile" class="tv-tile">
-            <div id="youtubePlayer" aria-label="Gaane ka video"></div>
-            <figcaption>📺 Video</figcaption>
-          </figure>
           <audio id="localAudio" preload="metadata"></audio>
         </div>
 
         <div class="radio-console">
+          <small id="localTrackCounter" class="counter">Mandi, Himachal se</small>
           <h1 id="trackTitle">Gaana aa raha hai...</h1>
           <p id="trackArtist">Thoda intezaar kijiye 🙏</p>
-          <p id="djComment" class="dj-comment hide" aria-live="polite"></p>
+
+          <div id="progressRow" class="progress">
+            <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Gaana aage-peeche karo">
+            <div class="times"><span id="timeNow">0:00</span><span id="timeTotal">0:00</span></div>
+          </div>
 
           <div class="transport" aria-label="Gaane ke button">
             <button id="prev" type="button" aria-label="Pichhla gaana">⏮<small>Pichhla</small></button>
             <button id="play" type="button" aria-label="Chalao ya roko">▶ Chalao</button>
             <button id="next" type="button" aria-label="Agla gaana">⏭<small>Agla</small></button>
           </div>
+
+          <p id="djComment" class="dj-comment hide" aria-live="polite"></p>
 
           <label for="volume">🔊 Awaaz</label>
           <input id="volume" class="volume" type="range" min="0" max="100" value="70">

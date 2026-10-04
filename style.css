@@ -2,7 +2,7 @@
 
 :root {
   --bg: #0a1510;
-  --panel: #11201a;
+  --panel: #11201ae6;
   --panel-2: #172b22;
   --line: #27402f;
   --accent: #5fe08a;
@@ -26,8 +26,10 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
+  /* Himachal illustration behind everything, darkened so text stays readable. */
   background:
-    radial-gradient(ellipse at 50% -10%, #1f4a33 0, transparent 55%),
+    linear-gradient(180deg, #0a151066, #0a1510cc 70%),
+    url("assets/himachal-bg.svg") center bottom / cover fixed,
     var(--bg);
   color: var(--text);
   font-family: "Hind", system-ui, sans-serif;
@@ -70,12 +72,8 @@ input:focus-visible {
   min-height: 100vh;
   display: grid;
   place-items: center;
-  padding: 18px 18px 120px;
+  padding: 18px;
   overflow: hidden;
-}
-
-.boot-screen .mountains {
-  height: 180px;
 }
 
 .bootbox {
@@ -84,15 +82,17 @@ input:focus-visible {
   width: min(480px, 100%);
   border: 1px solid var(--line);
   border-radius: 24px;
-  background: #0f1e17e6;
+  background: #0f1e17d9;
+  backdrop-filter: blur(8px);
   padding: 28px 22px;
   box-shadow: 0 30px 80px #0008;
   text-align: center;
 }
 
-.boot-icon {
-  font-size: 58px;
-  line-height: 1;
+.boot-logo {
+  width: 120px;
+  height: auto;
+  filter: drop-shadow(0 8px 16px #0009);
 }
 
 .bootbox h2 {
@@ -147,14 +147,13 @@ input:focus-visible {
 .banner {
   position: relative;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   margin-bottom: 16px;
   border-radius: var(--radius);
   background:
     radial-gradient(circle at 82% 30%, #f4c35acc 0 16px, #f4c35a33 17px, transparent 70px),
-    linear-gradient(180deg, #24493a, #102219);
+    linear-gradient(180deg, #24493acc, #102219e6);
   padding: 16px 18px 66px;
   overflow: hidden;
 }
@@ -163,9 +162,19 @@ input:focus-visible {
   height: 60px;
 }
 
+.banner-logo {
+  position: relative;
+  z-index: 1;
+  width: clamp(64px, 18vw, 96px);
+  height: auto;
+  filter: drop-shadow(0 6px 12px #0009);
+}
+
 .banner-text {
   position: relative;
   z-index: 1;
+  flex: 1;
+  min-width: 0;
 }
 
 .banner b {
@@ -183,6 +192,7 @@ input:focus-visible {
 }
 
 .banner .clock {
+  align-self: flex-start;
   position: relative;
   z-index: 1;
   border-radius: 999px;
@@ -202,6 +212,7 @@ input:focus-visible {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--panel);
+  backdrop-filter: blur(8px);
   box-shadow: 0 18px 50px #0005;
   overflow: hidden;
 }
@@ -243,37 +254,57 @@ input:focus-visible {
   padding: 16px;
 }
 
-.radio-face {
-  position: relative;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  border-radius: 14px;
+.art {
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
   background:
     var(--mountains) left bottom / auto 70px repeat-x,
     radial-gradient(circle at 30% 30%, #1d3b2c, #0b1711 75%);
-  padding: 18px 16px 70px;
+  padding: 18px 16px 30px;
 }
 
-.local-player-visual {
-  flex: 1 1 180px;
+/* Square "album art". For YouTube this is the player itself (must stay visible and at least 200x200). */
+.art-box {
+  width: clamp(200px, 64vw, 300px);
+  aspect-ratio: 1;
+  margin: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 18px 40px #000a;
+}
+
+.art-video {
+  background: #000;
+}
+
+#youtubePlayer {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.art-radio {
   display: grid;
   place-content: center;
   justify-items: center;
-  gap: 8px;
+  gap: 12px;
+  border: 1px solid #f4c35a55;
+  background: linear-gradient(160deg, #3a2a0c, #12201a 70%);
   color: var(--amber);
-  text-align: center;
 }
 
-.local-player-visual b {
-  letter-spacing: 0.08em;
+.art-radio b {
+  letter-spacing: 0.1em;
 }
 
-.local-player-visual small {
-  color: #d9eadf;
-  font-size: 15px;
+.live-badge {
+  border-radius: 999px;
+  background: #e0574f26;
+  color: #ffb3ad;
+  padding: 2px 12px;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .cassette {
@@ -292,7 +323,7 @@ input:focus-visible {
   border-radius: 50%;
 }
 
-.local-player-visual.playing .cassette span {
+.art-radio.playing .cassette span {
   animation: spin 2s linear infinite;
 }
 
@@ -300,27 +331,33 @@ input:focus-visible {
   to { transform: rotate(360deg); }
 }
 
-.tv-tile {
-  margin: 0;
-  flex: 0 0 auto;
-  display: grid;
-  gap: 4px;
-  color: var(--muted);
-  font-size: 13px;
-  text-align: center;
+.counter {
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
 }
 
-/* YouTube requires the embedded player to be at least 200x200 and visible. */
-#youtubePlayer {
-  display: block;
-  width: 200px;
-  height: 200px;
-  border-radius: 12px;
-  background: #000;
+.progress {
+  display: grid;
+  gap: 2px;
+}
+
+.progress input {
+  width: 100%;
+  height: 24px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+
+.times {
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
 }
 
 .radio-console {
-  order: -1; /* phones: title + controls first; desktop puts it back on the right */
   display: grid;
   gap: 12px;
   align-content: start;
@@ -722,7 +759,7 @@ input:focus-visible {
 
 @media (prefers-reduced-motion: reduce) {
   .bootbox button,
-  .local-player-visual.playing .cassette span,
+  .art-radio.playing .cassette span,
   .dj-comment.pop,
   .is-playing .eq i {
     animation: none;
@@ -753,10 +790,6 @@ input:focus-visible {
   .player-grid {
     grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
     align-items: stretch;
-  }
-
-  .radio-console {
-    order: 0;
   }
 
   .stations {

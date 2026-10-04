@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 84">
+  <!-- Himachali (Kullu) topi: grey wool cap with a red patterned front band. -->
+  <path d="M12 70 L17 24 Q60 8 103 24 L108 70 Z" fill="#4a5058"/>
+  <ellipse cx="60" cy="24" rx="43" ry="10" fill="#646b74"/>
+  <path d="M12 70 L15 44 Q60 35 105 44 L108 70 Q60 78 12 70 Z" fill="#c0392b"/>
+  <g fill="#f4c35a">
+    <path d="M24 50l5 7-5 7-5-7z"/><path d="M48 48l5 7-5 7-5-7z"/><path d="M72 48l5 7-5 7-5-7z"/><path d="M96 50l5 7-5 7-5-7z"/>
+  </g>
+  <g fill="#2e9e5b">
+    <path d="M36 49l4 6-4 6-4-6z"/><path d="M60 48l4 6-4 6-4-6z"/><path d="M84 49l4 6-4 6-4-6z"/>
+  </g>
+  <path d="M15 44 Q60 35 105 44" stroke="#f4c35a" stroke-width="2.5" fill="none"/>
+  <path d="M12 70 Q60 78 108 70" stroke="#f4c35a" stroke-width="2.5" fill="none"/>
+</svg>

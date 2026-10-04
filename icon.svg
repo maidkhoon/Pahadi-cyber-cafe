@@ -1,7 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" fill="#020602"/>
-  <path d="M40 346 156 178l62 90 48-58 206 136v82H40z" fill="#173817"/>
-  <path d="M156 178 218 268l48-58 65 43-57 12-35 55-41-58-30 84H84z" fill="#7dff7d"/>
-  <rect x="86" y="346" width="340" height="96" rx="10" fill="#071007" stroke="#7dff7d" stroke-width="10"/>
-  <path d="M118 392h128M118 418h78M304 396h74" stroke="#7dff7d" stroke-width="16" stroke-linecap="round"/>
+  <rect width="512" height="512" rx="96" fill="#12201a"/>
+  <path d="M0 400 L120 300 L200 350 L300 250 L400 340 L512 280 L512 512 L0 512 Z" fill="#2f5546"/>
+  <path d="M276 274 L300 250 L324 276 L312 272 L300 284 L288 272 Z" fill="#f2f7fa"/>
+  <g transform="translate(76 96) scale(3)">
+    <path d="M12 70 L17 24 Q60 8 103 24 L108 70 Z" fill="#4a5058"/>
+    <ellipse cx="60" cy="24" rx="43" ry="10" fill="#646b74"/>
+    <path d="M12 70 L15 44 Q60 35 105 44 L108 70 Q60 78 12 70 Z" fill="#c0392b"/>
+    <g fill="#f4c35a"><path d="M24 50l5 7-5 7-5-7z"/><path d="M48 48l5 7-5 7-5-7z"/><path d="M72 48l5 7-5 7-5-7z"/><path d="M96 50l5 7-5 7-5-7z"/></g>
+    <g fill="#2e9e5b"><path d="M36 49l4 6-4 6-4-6z"/><path d="M60 48l4 6-4 6-4-6z"/><path d="M84 49l4 6-4 6-4-6z"/></g>
+    <path d="M15 44 Q60 35 105 44" stroke="#f4c35a" stroke-width="2.5" fill="none"/>
+    <path d="M12 70 Q60 78 108 70" stroke="#f4c35a" stroke-width="2.5" fill="none"/>
+  </g>
 </svg>
