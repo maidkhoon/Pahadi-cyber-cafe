@@ -1,0 +1,17 @@
+{
+  "name": "Pahadi Cyber Café",
+  "short_name": "Pahadi Café",
+  "description": "Pahadi, Bollywood, Punjabi, Rap aur Shaadi ke gaane, ek tap mein.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#020602",
+  "theme_color": "#061006",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

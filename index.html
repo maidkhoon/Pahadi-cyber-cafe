@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="hi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#061006">
+  <meta name="description" content="Pahadi Cyber Café: Pahadi Nati, Himachali Rap, Old Is Gold, Punjabi aur Shaadi ke gaane, ek tap mein. Free, bina login.">
+  <title>Pahadi Cyber Café – Pahadi, Bollywood, Punjabi Gaane</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="boot" class="boot-screen">
+    <div class="bootbox">
+      <div class="boot-icon" aria-hidden="true">🏔️📻</div>
+      <h2>Pahadi Cyber Café</h2>
+      <p class="boot-sub">पहाड़ी रेडियो</p>
+      <p class="boot-lead">Pahadi Nati, Rap, Old Is Gold, Punjabi, Shaadi ke gaane... sab ek tap mein 🎶</p>
+      <button id="enter" type="button">▶ Gaane Suno</button>
+      <p class="boot-note">Free hai · Koi login nahi</p>
+    </div>
+  </div>
+
+  <main id="main" class="app-shell hide">
+    <header class="topbar" id="home">
+      <div>
+        <b>🏔️ Pahadi Cyber Café</b>
+        <small>Apne pahadon ke gaane, apne phone pe</small>
+      </div>
+      <small id="clock" class="clock"></small>
+    </header>
+
+    <section class="window player-window" id="radio" aria-labelledby="radio-title">
+      <div class="window-title">
+        <span id="radio-title">🎵 Abhi baj raha hai</span>
+        <span id="playerState">Shuru ho raha hai...</span>
+      </div>
+
+      <div class="player-grid">
+        <div class="radio-face">
+          <div id="localPlayerVisual" class="local-player-visual" aria-hidden="true">
+            <div class="cassette">
+              <span></span>
+              <span></span>
+            </div>
+            <b>PAHADI RADIO</b>
+            <small id="localTrackCounter">Mandi, Himachal se</small>
+          </div>
+          <!-- YouTube's terms require the player to stay visible and at least 200x200. -->
+          <figure id="tvTile" class="tv-tile">
+            <div id="youtubePlayer" aria-label="Gaane ka video"></div>
+            <figcaption>📺 Video</figcaption>
+          </figure>
+          <audio id="localAudio" preload="metadata"></audio>
+        </div>
+
+        <div class="radio-console">
+          <h1 id="trackTitle">Gaana aa raha hai...</h1>
+          <p id="trackArtist">Thoda intezaar kijiye 🙏</p>
+          <p id="djComment" class="dj-comment hide" aria-live="polite"></p>
+
+          <div class="transport" aria-label="Gaane ke button">
+            <button id="prev" type="button" aria-label="Pichhla gaana">⏮<small>Pichhla</small></button>
+            <button id="play" type="button" aria-label="Chalao ya roko">▶ Chalao</button>
+            <button id="next" type="button" aria-label="Agla gaana">⏭<small>Agla</small></button>
+          </div>
+
+          <label for="volume">🔊 Awaaz</label>
+          <input id="volume" class="volume" type="range" min="0" max="100" value="70">
+
+          <p class="status-message" id="statusMessage">Gaane aa rahe hain...</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="station-section" id="stations">
+      <div class="section-head">
+        <b>📻 Station chuno</b>
+        <small>Jo mann kare, wo suno</small>
+      </div>
+      <div class="stations" id="stationList"></div>
+    </section>
+
+    <section class="hero-panel">
+      <div class="tagline">Suno. Naacho.<br>Yaad karo. 🏔️</div>
+    </section>
+
+    <section class="window ambience" id="ambience">
+      <div class="window-title">
+        <span>🌧️ Mahaul banao</span>
+        <span>Gaane ke saath</span>
+      </div>
+      <div class="ambience-grid" id="ambienceList"></div>
+      <p class="asset-note">Patti ko daayein khiskao, awaaz badhegi. Baayein khiskao, band ho jaayegi.</p>
+    </section>
+
+    <section class="window about" id="help">
+      <div class="window-title">
+        <span>🙋 Madad</span>
+        <span>Aksar puchhe jaane wale sawaal</span>
+      </div>
+      <dl class="faq">
+        <dt>Gaana ruk gaya?</dt>
+        <dd>Phone lock karne ya doosra app kholne par gaana ruk jaata hai. Wapas aaiye aur <b>▶ Chalao</b> dabaiye.</dd>
+        <dt>Gaana pasand nahi aaya?</dt>
+        <dd><b>⏭ Agla</b> dabaiye. Ya upar se doosra station chuniye.</dd>
+        <dt>Phone mein app ki tarah kaise rakhein?</dt>
+        <dd>Chrome mein upar <b>⋮</b> dabaiye, phir <b>"Add to Home screen"</b> dabaiye. Bas!</dd>
+        <dt>Paise lagte hain?</dt>
+        <dd>Nahi, bilkul free hai. Bas internet chahiye.</dd>
+      </dl>
+    </section>
+
+    <section class="window about" id="about">
+      <div class="window-title">
+        <span>🙏 Hamare baare mein</span>
+      </div>
+      <p>Ye Mandi, Himachal ka apna radio hai. Pahadi gaane, purane Bollywood gaane, Punjabi, Rap aur Shaadi ke gaane, sab ek jagah. DJ Bittu har gaane pe kuch na kuch bolta rehta hai! Gaane YouTube se aate hain. Har gaane ka haq uske gaane wale aur banane wale ka hai.</p>
+    </section>
+  </main>
+
+  <nav id="nav" class="bottom-nav hide" aria-label="Menu">
+    <button type="button" data-target="radio">🎵<span>Radio</span></button>
+    <button type="button" data-target="stations">📻<span>Station</span></button>
+    <button type="button" data-target="ambience">🌧️<span>Mahaul</span></button>
+    <button type="button" data-target="help">🙋<span>Madad</span></button>
+  </nav>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script src="key.js"></script>
+  <script src="config.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="app.js"></script>
+</body>
+</html>
