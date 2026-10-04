@@ -1,18 +1,20 @@
-@import url("https://fonts.googleapis.com/css2?family=Hind:wght@400;600;700&family=VT323&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&family=Hind:wght@400;600;700&family=VT323&display=swap");
 
 :root {
-  --bg: #0a1510;
-  --panel: #11201ae6;
-  --panel-2: #172b22;
-  --line: #27402f;
-  --accent: #5fe08a;
-  --accent-ink: #062012;
+  --bg: #0d0b1f;
+  --panel: #161230e0;
+  --panel-2: #241d45;
+  --line: #3a3068;
+  --accent: #3ef0e4;
+  --accent-ink: #120c2e;
   --amber: #f4c35a;
   --topi: #e0574f; /* Kullu topi red */
   --text: #eef7f0;
-  --muted: #a3bcad;
+  --muted: #b9b1d8;
+  --neon-pink: #ff4fd8;
+  --neon-cyan: #3ef0e4;
   --radius: 18px;
-  --mountains: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120'><polygon points='0,120 0,52 45,42 85,66 135,18 175,54 215,30 262,62 305,24 352,58 400,52 400,120' fill='%231f4030'/><polygon points='122,30 135,18 148,30 141,28 135,33 129,28' fill='%23e8f1ec'/><polygon points='205,38 215,30 225,38 220,36 215,40 210,36' fill='%23e8f1ec'/><polygon points='294,34 305,24 316,34 310,32 305,36 300,32' fill='%23e8f1ec'/><polygon points='0,120 0,88 55,74 110,94 165,76 225,100 285,74 345,96 400,88 400,120' fill='%23132a1f'/></svg>");
+  --mountains: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120'><polygon points='0,120 0,52 45,42 85,66 135,18 175,54 215,30 262,62 305,24 352,58 400,52 400,120' fill='%23382c6e'/><polygon points='122,30 135,18 148,30 141,28 135,33 129,28' fill='%23e8f1ec'/><polygon points='205,38 215,30 225,38 220,36 215,40 210,36' fill='%23e8f1ec'/><polygon points='294,34 305,24 316,34 310,32 305,36 300,32' fill='%23e8f1ec'/><polygon points='0,120 0,88 55,74 110,94 165,76 225,100 285,74 345,96 400,88 400,120' fill='%23201a46'/></svg>");
 }
 
 * {
@@ -28,7 +30,7 @@ body {
   margin: 0;
   /* Himachal illustration behind everything, darkened so text stays readable. */
   background:
-    linear-gradient(180deg, #0a151066, #0a1510cc 70%),
+    linear-gradient(180deg, #0d0b1f33, #0d0b1fb3 75%),
     url("assets/himachal-bg.svg") center bottom / cover fixed,
     var(--bg);
   color: var(--text);
@@ -80,9 +82,9 @@ input:focus-visible {
   position: relative;
   z-index: 1;
   width: min(480px, 100%);
-  border: 1px solid var(--line);
+  border: 1px solid #ff4fd855;
   border-radius: 24px;
-  background: #0f1e17d9;
+  background: #140f2ed9;
   backdrop-filter: blur(8px);
   padding: 28px 22px;
   box-shadow: 0 30px 80px #0008;
@@ -97,8 +99,35 @@ input:focus-visible {
 
 .bootbox h2 {
   margin: 10px 0 0;
-  color: var(--accent);
-  font: 48px/1 "VT323", monospace;
+  font-size: clamp(30px, 9vw, 44px);
+  line-height: 1.15;
+}
+
+/* Neon sign: white-hot core, coloured glow, an occasional flicker like a real tube. */
+.neon {
+  font-family: "Audiowide", "Hind", sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.neon-pink,
+.neon-cyan {
+  color: #fff;
+  animation: flicker 7s infinite;
+}
+
+.neon-pink {
+  text-shadow: 0 0 2px #fff, 0 0 8px var(--neon-pink), 0 0 18px var(--neon-pink), 0 0 36px var(--neon-pink);
+}
+
+.neon-cyan {
+  text-shadow: 0 0 2px #fff, 0 0 8px var(--neon-cyan), 0 0 18px var(--neon-cyan), 0 0 36px var(--neon-cyan);
+  animation-delay: -3s;
+}
+
+@keyframes flicker {
+  0%, 91%, 93%, 96%, 100% { opacity: 1; }
+  92%, 95% { opacity: 0.55; }
 }
 
 .boot-sub {
@@ -117,12 +146,12 @@ input:focus-visible {
   width: 100%;
   border: 0;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--accent), #2fbf6a);
+  background: linear-gradient(135deg, var(--neon-cyan), #a46bff);
   color: var(--accent-ink);
   padding: 16px;
   font-size: 23px;
   font-weight: 700;
-  box-shadow: 0 10px 30px #5fe08a40;
+  box-shadow: 0 10px 30px #3ef0e44d;
   animation: pulse 2.2s ease-in-out infinite;
 }
 
@@ -152,8 +181,8 @@ input:focus-visible {
   margin-bottom: 16px;
   border-radius: var(--radius);
   background:
-    radial-gradient(circle at 82% 30%, #f4c35acc 0 16px, #f4c35a33 17px, transparent 70px),
-    linear-gradient(180deg, #24493acc, #102219e6);
+    radial-gradient(circle at 82% 30%, #fff4dccc 0 16px, #ffd1f044 17px, transparent 70px),
+    linear-gradient(180deg, #2a1a5ccc, #140f2ee6);
   padding: 16px 18px 66px;
   overflow: hidden;
 }
@@ -179,9 +208,8 @@ input:focus-visible {
 
 .banner b {
   display: block;
-  color: #fff;
-  font: clamp(30px, 8vw, 46px)/1 "VT323", monospace;
-  text-shadow: 0 2px 12px #0008;
+  font-size: clamp(24px, 6.5vw, 40px);
+  line-height: 1.15;
 }
 
 .banner small {
@@ -260,7 +288,7 @@ input:focus-visible {
   border-radius: 16px;
   background:
     var(--mountains) left bottom / auto 70px repeat-x,
-    radial-gradient(circle at 30% 30%, #1d3b2c, #0b1711 75%);
+    radial-gradient(circle at 30% 30%, #3a2470, #140f2e 75%);
   padding: 18px 16px 30px;
 }
 
@@ -441,10 +469,10 @@ input:focus-visible {
   min-height: 72px;
   border: 0;
   border-radius: 999px;
-  background: linear-gradient(135deg, var(--accent), #2fbf6a);
+  background: linear-gradient(135deg, var(--neon-cyan), #a46bff);
   color: var(--accent-ink);
   font-size: 24px;
-  box-shadow: 0 10px 26px #5fe08a40;
+  box-shadow: 0 10px 26px #3ef0e44d;
 }
 
 .transport button:active {
@@ -647,7 +675,7 @@ input:focus-visible {
   gap: 8px;
   border: 1px solid var(--line);
   border-radius: 18px;
-  background: #16291fef;
+  background: #1d1740ef;
   backdrop-filter: blur(12px);
   padding: 8px;
   box-shadow: 0 12px 40px #000a;
@@ -716,7 +744,7 @@ input:focus-visible {
   width: min(720px, 100%);
   padding: 6px 8px calc(6px + env(safe-area-inset-bottom));
   border-top: 1px solid var(--line);
-  background: #0c1913f2;
+  background: #120e2af2;
   backdrop-filter: blur(12px);
 }
 
@@ -758,6 +786,8 @@ input:focus-visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .neon-pink,
+  .neon-cyan,
   .bootbox button,
   .art-radio.playing .cassette span,
   .dj-comment.pop,

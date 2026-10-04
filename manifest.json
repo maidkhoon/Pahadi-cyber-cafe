@@ -4,8 +4,8 @@
   "description": "Pahadi, Bollywood, Punjabi, Rap aur Shaadi ke gaane, ek tap mein.",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#020602",
-  "theme_color": "#061006",
+  "background_color": "#0d0b1f",
+  "theme_color": "#120c2e",
   "icons": [
     {
       "src": "icon.svg",
