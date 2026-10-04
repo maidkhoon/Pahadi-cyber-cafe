@@ -153,16 +153,30 @@ function enterSystem() {
   if (state.source !== "youtube" || state.isReady) loadStation(state.station, true);
 }
 
-function renderStations() {
-  const selectedId = getInitialStation().id;
-  $("#stationList").innerHTML = config.stations.map((station) => `
+function stationCard(station, selectedId) {
+  return `
     <button class="station ${station.id === selectedId ? "active" : ""}" data-station-id="${station.id}" type="button">
-      <span>${station.icon}</span>
+      <span class="station-icon" aria-hidden="true">${station.icon}</span>
       <b>${station.name}</b>
       <small>${station.description}</small>
-      ${getStationSource(station) === "youtube" ? "" : `<em class="bg-badge">📴 Phone lock pe bhi chalega</em>`}
-    </button>
-  `).join("");
+      <em class="now"><i class="eq" aria-hidden="true"><i></i><i></i><i></i></i> Baj raha hai</em>
+    </button>`;
+}
+
+function renderStations() {
+  const selectedId = getInitialStation().id;
+  const groups = config.stationGroups || [{ title: "", note: "", color: "" }];
+  // Stations without a known group go in the last section rather than disappearing.
+  const groupOf = (station) => (groups.some((g) => g.id === station.group) ? station.group : groups.at(-1).id);
+  $("#stationList").innerHTML = groups.map((group) => {
+    const list = config.stations.filter((station) => groupOf(station) === group.id);
+    if (!list.length) return "";
+    return `
+      <div class="station-group" style="--c: ${group.color || "var(--accent)"}">
+        <div class="group-head"><b>${group.title}</b><small>${group.note}</small></div>
+        <div class="stations">${list.map((station) => stationCard(station, selectedId)).join("")}</div>
+      </div>`;
+  }).join("");
 
   $$(".station").forEach((button) => {
     button.addEventListener("click", () => selectStation(button.dataset.stationId, true));
@@ -310,6 +324,8 @@ function selectStation(stationId, shouldPlay = false) {
 
   $("#trackTitle").textContent = station.name;
   $("#trackArtist").textContent = station.description;
+  $("#miniIcon").textContent = station.icon;
+  $("#miniStation").textContent = station.name;
   state.source = getStationSource(station);
   syncPlayerSurface();
 
@@ -494,6 +510,7 @@ function onPlayerStateChange(event) {
   const YTState = window.YT.PlayerState;
   state.isPlaying = event.data === YTState.PLAYING;
   $("#localPlayerVisual").classList.toggle("playing", state.isPlaying);
+  document.body.classList.toggle("is-playing", state.isPlaying);
   state.isLoading = event.data === YTState.BUFFERING || event.data === YTState.CUED;
 
   if (event.data === YTState.PLAYING) {
@@ -588,6 +605,8 @@ function showDjComment(songKey) {
 
 function setPlayButton(isPlaying) {
   $("#play").textContent = isPlaying ? "⏸ Roko" : "▶ Chalao";
+  $("#miniPlay").textContent = isPlaying ? "⏸" : "▶";
+  document.body.classList.toggle("is-playing", isPlaying);
 }
 
 function setStatus(message, status) {
@@ -666,6 +685,19 @@ function setupVisibilityResume() {
   });
 }
 
+// Small player pinned above the menu whenever the big player is scrolled out of view.
+function setupMiniPlayer() {
+  new MutationObserver(() => {
+    $("#miniTitle").textContent = $("#trackTitle").textContent;
+  }).observe($("#trackTitle"), { childList: true, characterData: true, subtree: true });
+  $("#miniPlay").addEventListener("click", togglePlay);
+  $("#miniNext").addEventListener("click", () => $("#next").click());
+  $("#miniInfo").addEventListener("click", () => $("#radio").scrollIntoView({ behavior: "smooth", block: "start" }));
+  new IntersectionObserver(([entry]) => {
+    $("#miniPlayer").classList.toggle("hide", entry.isIntersecting || $("#main").classList.contains("hide"));
+  }).observe($("#radio"));
+}
+
 function setupNavigation() {
   $$("#nav button").forEach((button) => {
     button.addEventListener("click", () => {
@@ -703,6 +735,7 @@ function init() {
   document.addEventListener("pointerdown", () => state.audioCtx?.resume());
   setupVisibilityResume();
   setupNavigation();
+  setupMiniPlayer();
   setupMediaSession();
   selectStation(state.station.id, false);
   clock();

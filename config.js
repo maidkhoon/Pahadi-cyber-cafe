@@ -23,9 +23,16 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     "Rukna mana hai, agla gaana bhi zabardast hai! 🎶",
     "Maggi ban rahi hai, tab tak ye gaana suno! 🍜"
   ],
+  // Station list sections, in display order. Each station's `group` picks one.
+  stationGroups: [
+    { id: "pahadi", title: "🏔️ Pahadi Gaane", note: "Mandi aur Himachal ke gaane", color: "#f4c35a" },
+    { id: "live", title: "📴 Live Radio", note: "Phone lock karke bhi chalega", color: "#5fe08a" },
+    { id: "more", title: "🎬 Bollywood, Punjabi aur Rap", note: "Har mood ke gaane", color: "#ff7eb6" }
+  ],
   stations: [
     {
       id: "mandyali-hits",
+      group: "pahadi",
       icon: "🏔️",
       name: "Mandyali Hits",
       description: "Mandi ke naye Mandyali gaane",
@@ -43,6 +50,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "pahadi-nati",
+      group: "pahadi",
       icon: "💃",
       name: "Pahadi Nati",
       description: "Haath pakdo, gol ghero, Nati shuru!",
@@ -60,6 +68,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "pahadi-dance",
+      group: "pahadi",
       icon: "🕺",
       name: "Pahadi Dance",
       description: "DJ wale pahadi gaane, full josh",
@@ -77,6 +86,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "himachali-rap",
+      group: "pahadi",
       icon: "😎",
       name: "Himachali Rap",
       description: "Pahadi swag, pahadi rap",
@@ -94,6 +104,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "purane-pahadi",
+      group: "pahadi",
       icon: "📻",
       name: "Purane Pahadi Geet",
       description: "Purane gaane, purani yaadein",
@@ -111,6 +122,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "bollywood-live",
+      group: "live",
       icon: "📻",
       name: "Bollywood Live",
       description: "Bollywood radio, seedha live",
@@ -125,6 +137,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "old-is-gold-live",
+      group: "live",
       icon: "📼",
       name: "Old Is Gold Live",
       description: "90s ke gaane, live radio pe",
@@ -139,6 +152,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "punjabi-live",
+      group: "live",
       icon: "🌾",
       name: "Punjabi Live",
       description: "Punjabi radio, seedha live",
@@ -153,6 +167,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "old-is-gold",
+      group: "more",
       icon: "📼",
       name: "Old Is Gold",
       description: "90s aur 2000s ke Bollywood gaane",
@@ -170,6 +185,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "punjabi",
+      group: "more",
       icon: "🌾",
       name: "Punjabi Hits",
       description: "Balle balle! Punjabi tadka",
@@ -187,6 +203,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "desi-rap",
+      group: "more",
       icon: "🎤",
       name: "Desi Rap",
       description: "Hindi aur desi rap",
@@ -204,6 +221,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
     },
     {
       id: "shaadi-special",
+      group: "more",
       icon: "💍",
       name: "Shaadi Special",
       description: "Shaadi aur baraat mein bajne wale gaane",

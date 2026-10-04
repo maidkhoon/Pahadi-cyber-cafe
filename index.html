@@ -12,20 +12,22 @@
 <body>
   <div id="boot" class="boot-screen">
     <div class="bootbox">
-      <div class="boot-icon" aria-hidden="true">🏔️📻</div>
+      <div class="boot-icon" aria-hidden="true">📻</div>
       <h2>Pahadi Cyber Café</h2>
       <p class="boot-sub">पहाड़ी रेडियो</p>
       <p class="boot-lead">Pahadi Nati, Rap, Old Is Gold, Punjabi, Shaadi ke gaane... sab ek tap mein 🎶</p>
       <button id="enter" type="button">▶ Gaane Suno</button>
-      <p class="boot-note">Free hai · Koi login nahi</p>
+      <p class="boot-note">✅ Free hai &nbsp;·&nbsp; ✅ Koi login nahi</p>
     </div>
+    <div class="mountains" aria-hidden="true"></div>
   </div>
 
   <main id="main" class="app-shell hide">
-    <header class="topbar" id="home">
-      <div>
-        <b>🏔️ Pahadi Cyber Café</b>
-        <small>Apne pahadon ke gaane, apne phone pe</small>
+    <header class="banner" id="home">
+      <div class="mountains" aria-hidden="true"></div>
+      <div class="banner-text">
+        <b>Pahadi Cyber Café</b>
+        <small>Apne pahadon ke gaane, apne phone pe 🎶</small>
       </div>
       <small id="clock" class="clock"></small>
     </header>
@@ -78,11 +80,7 @@
         <b>📻 Station chuno</b>
         <small>Jo mann kare, wo suno</small>
       </div>
-      <div class="stations" id="stationList"></div>
-    </section>
-
-    <section class="hero-panel">
-      <div class="tagline">Suno. Naacho.<br>Yaad karo. 🏔️</div>
+      <div id="stationList"></div>
     </section>
 
     <section class="window ambience" id="ambience">
@@ -103,7 +101,7 @@
         <dt>Gaana ruk gaya?</dt>
         <dd>Phone lock karne ya doosra app kholne par YouTube wale gaane ruk jaate hain. Wapas aaiye aur <b>▶ Chalao</b> dabaiye.</dd>
         <dt>Phone band karke bhi sunna hai?</dt>
-        <dd><b>📴 Phone lock pe bhi chalega</b> wala station chuniye (Bollywood Live, Old Is Gold Live, Punjabi Live). Ye live radio hai, phone jeb mein rakh ke suniye.</dd>
+        <dd><b>📴 Live Radio</b> wala koi station chuniye (Bollywood Live, Old Is Gold Live, Punjabi Live). Ye phone jeb mein rakh ke bhi bajta rahega.</dd>
         <dt>Gaana pasand nahi aaya?</dt>
         <dd><b>⏭ Agla</b> dabaiye. Ya upar se doosra station chuniye.</dd>
         <dt>Phone mein app ki tarah kaise rakhein?</dt>
@@ -120,6 +118,15 @@
       <p>Ye Mandi, Himachal ka apna radio hai. Pahadi gaane, purane Bollywood gaane, Punjabi, Rap aur Shaadi ke gaane, sab ek jagah. DJ Bittu har gaane pe kuch na kuch bolta rehta hai! Gaane YouTube se aate hain. Har gaane ka haq uske gaane wale aur banane wale ka hai.</p>
     </section>
   </main>
+
+  <div id="miniPlayer" class="mini-player hide">
+    <button id="miniInfo" class="mini-info" type="button" aria-label="Player pe jaao">
+      <span id="miniIcon" aria-hidden="true">🎵</span>
+      <span class="mini-text"><b id="miniTitle">Gaana aa raha hai...</b><small id="miniStation"></small></span>
+    </button>
+    <button id="miniPlay" class="mini-btn mini-play" type="button" aria-label="Chalao ya roko">▶</button>
+    <button id="miniNext" class="mini-btn" type="button" aria-label="Agla gaana">⏭</button>
+  </div>
 
   <nav id="nav" class="bottom-nav hide" aria-label="Menu">
     <button type="button" data-target="radio">🎵<span>Radio</span></button>
