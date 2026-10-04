@@ -172,7 +172,7 @@ window.PAHADI_CYBER_CAFE_CONFIG = {
       name: "Old Is Gold",
       description: "90s aur 2000s ke Bollywood gaane",
       source: "youtube",
-      searchQuery: "90s bollywood song",
+      searchQuery: "90s hindi song full video",
       playlistUrl: "",
       playlistId: "",
       videoIds: [],
