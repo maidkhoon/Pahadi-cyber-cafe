@@ -1,4 +1,4 @@
-const CACHE_NAME = "pahadi-cyber-cafe-v16";
+const CACHE_NAME = "pahadi-cyber-cafe-v17";
 const LOCAL_ASSETS = [
   "./",
   "./index.html",

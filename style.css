@@ -2,7 +2,7 @@
 
 :root {
   --bg: #0d0b1f;
-  --panel: #161230e0;
+  --panel: #1a1538c4;
   --panel-2: #241d45;
   --line: #3a3068;
   --accent: #3ef0e4;
@@ -28,15 +28,24 @@ html {
 body {
   min-height: 100vh;
   margin: 0;
-  /* Himachal illustration behind everything, darkened so text stays readable. */
-  background:
-    linear-gradient(180deg, #0d0b1f33, #0d0b1fb3 75%),
-    url("assets/himachal-bg.svg") center bottom / cover fixed,
-    var(--bg);
+  background: var(--bg);
   color: var(--text);
   font-family: "Hind", system-ui, sans-serif;
   font-size: 17px;
   line-height: 1.5;
+}
+
+/* Pahadi Cyber Café street at sunset behind everything, with only a light shade at the bottom.
+   A fixed layer instead of background-attachment: fixed, which iPhones ignore (the image would
+   stretch over the whole page height). */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, #0d0b1f00 0%, #0d0b1f26 55%, #0d0b1f73 100%),
+    url("assets/cafe-bg.webp") 72% center / cover no-repeat;
 }
 
 button,
@@ -84,8 +93,8 @@ input:focus-visible {
   width: min(480px, 100%);
   border: 1px solid #ff4fd855;
   border-radius: 24px;
-  background: #140f2ed9;
-  backdrop-filter: blur(8px);
+  background: #1a1538c4;
+  backdrop-filter: blur(14px);
   padding: 28px 22px;
   box-shadow: 0 30px 80px #0008;
   text-align: center;
@@ -182,7 +191,7 @@ input:focus-visible {
   border-radius: var(--radius);
   background:
     radial-gradient(circle at 82% 30%, #fff4dccc 0 16px, #ffd1f044 17px, transparent 70px),
-    linear-gradient(180deg, #2a1a5ccc, #140f2ee6);
+    linear-gradient(180deg, #2a1a5c99, #140f2ecc);
   padding: 16px 18px 66px;
   overflow: hidden;
 }
@@ -240,8 +249,8 @@ input:focus-visible {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--panel);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 18px 50px #0005;
+  backdrop-filter: blur(14px);
+  box-shadow: 0 18px 50px #0004;
   overflow: hidden;
 }
 
@@ -494,12 +503,22 @@ input:focus-visible {
 
 /* ---------- Stations ---------- */
 
+/* Headings that sit straight on the bright background get a dark pill so they stay readable. */
+.section-head,
+.group-head {
+  width: fit-content;
+  max-width: 100%;
+  border-radius: 999px;
+  background: #1a1538d9;
+  backdrop-filter: blur(10px);
+  padding: 4px 14px;
+}
+
 .section-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
   gap: 12px;
-  padding: 0 4px;
 }
 
 .section-head b {
@@ -521,7 +540,7 @@ input:focus-visible {
   flex-wrap: wrap;
   align-items: baseline;
   gap: 4px 10px;
-  margin: 0 4px 8px;
+  margin: 0 0 8px;
 }
 
 .group-head b {
@@ -535,6 +554,7 @@ input:focus-visible {
 }
 
 .station {
+  backdrop-filter: blur(10px);
   display: grid;
   grid-template-columns: 52px 1fr;
   gap: 2px 12px;
